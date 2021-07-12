@@ -1,1 +1,6 @@
-# Flask-ThriftClient-
+# Fixing Module Flask-ThriftClient
+
+
+## CHanges:
+
+
