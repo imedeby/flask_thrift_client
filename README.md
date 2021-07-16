@@ -133,7 +133,7 @@ connections:
     app.config["THRIFTCLIENT_TRANSPORT"] = "tcp://127.0.0.1:9090"
     app.config["THRIFTCLIENT_ALWAYS_CONNECT"] = False
 
-    thriftclient = ThriftClient(MyService.Client, app)
+    thriftclient = Thrift_Client(MyService.Client, app)
 
     @app.route("/with_autoconnect")
     @thriftclient.autoconnect
@@ -163,4 +163,4 @@ THRIFTCLIENT_BUFFERED: use buffered transport (default False)
 
 THRIFTCLIENT_ZLIB: use zlib compressed transport (default False)
 
-THRIFTCLIENT_BUFFERED: use buffered transport (default False)
+THRIFTCLIENT_FRAMED: use framed transport (default False)
