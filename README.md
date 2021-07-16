@@ -1,4 +1,4 @@
-Flask Thrift Client
+Flask Thrift Client\
 ##################
 
 Introduction
