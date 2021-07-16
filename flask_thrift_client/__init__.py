@@ -13,169 +13,8 @@ from functools import wraps
 from contextlib import contextmanager
 import ssl
 
-class ThriftClient(object):
-	"""
-Flask ThriftClient
-##################
+class Thrift_Client(object):
 
-Introduction
-============
-
-This extension provide a simple intergration with
-`Thrift <https://thrift.apache.org>`_ RPC server.
-
-.. code:: python
-
-    from flask import Flask
-    from flask_thriftclient import ThriftClient
-
-    from MyGeneratedThriftCode import MyService
-
-    app = Flask(__name__)
-    app.config["THRIFTCLIENT_TRANSPORT"] = "tcp://127.0.0.1:9090"
-
-    thriftclient = ThriftClient(MyService.Client, app)
-
-    @app.route("/")
-    def home():
-        data = thriftclient.client.mymethod()
-        return data
-
-
-Transport
-=========
-
-Thrift endpoints are defined in the configuration variable
-THRIFTCLIENT_TRANSPORT as an URL. The default transport is
-tcp://localhost:9090
-
-Available url schemes are:
-
-tcp: use TCP socket as transport, you have to define the server
-address and port. If the port isn't defined, 9090 will be used
-
-Example:
-
-  * tcp://127.0.0.1
-
-  * tcp://localhost:1234/
-
-
-http: use HTTP protocol as transport. Examples:
-
-  * http://myservice.local/
-
-unix: use unix sockets as transport, as this scheme follow URI format,
-it *MUST* have either no or three "/" before the socket path
-
-  * unix:///tmp/mysocket #absolute path
-
-  * unix:/tmp/mysocket #absolute path
-
-  * unix:./mysocket #relative path
-
-SSL
-===
-
-You may set SSL version of transport communications by using *'s'*
-version of url scheme:
-
-tcp <=> tcps
-http <=> https
-unix <=> unixs
-
-examples:
-
-  * https://myserver/
-
-  * unixs:/tmp/mysocket
-
-  * tcps://localhost:5533/
-
-Two options are related to SSL transport:
-
-THRIFTCLIENT_SSL_VALIDATE: True if the certificate has to be validated
-(default True)
-
-THRIFTCLIENT_SSL_CA_CERTS: path to the SSL certificate (default None)
-
-Note that you *MUST* set one of theses options:
-
-.. code:: python
-
-    app.config["THRIFTCLIENT_SSL_VALIDATE"] = False
-    app.config["THRIFTCLIENT_TRANSPORT"] = "https://127.0.0.1/"
-
-    #or
-
-    app.config["THRIFTCLIENT_SSL_CA_CERTS"] = "./cacert.pem"
-    app.config["THRIFTCLIENT_TRANSPORT"] = "https://127.0.0.1/"
-
-Protocol
-========
-
-You may define which procotol must be use by setting the parametter
-*THRIFTCLIENT_PROTOCOL*. The default protocol is Binary.
-
-Available parametters are:
-
-ThriftClient.BINARY or "BINARY" : use the binary protocol
-
-ThriftClient.COMPACT or "COMPACT" : use the compact protocol
-
-ThriftClient.JSON or "JSON" : use the JSON protocol. note that this
-protocol is only available for thrift >= 0.9.1
-
-Connection
-==========
-
-By default the application will open then close the transport for each request
-This can be overriden by setting *THRIFTCLIENT_ALWAYS_CONNECT* to False
-
-when THRIFTCLIENT_ALWAYS_CONNECT is set to False there is 3 ways to handle your
-connections:
-
-- you can call transport.close and transport.open manually
-- you can use the autoconnect decorator
-- you can use the connect "with" context
-
-.. code:: python
-
-    app = Flask(__name__)
-    app.config["THRIFTCLIENT_TRANSPORT"] = "tcp://127.0.0.1:9090"
-    app.config["THRIFTCLIENT_ALWAYS_CONNECT"] = False
-
-    thriftclient = ThriftClient(MyService.Client, app)
-
-    @app.route("/with_autoconnect")
-    @thriftclient.autoconnect
-    def with_autoconnect():
-        data = thriftclient.client.mymethod()
-        return data
-
-    @app.route("/with_context")
-    def with_context():
-        with thriftclient.connect():
-            data = thriftclient.client.mymethod()
-            return data
-
-    @app.route("/with_manual_connection")
-    def with_manual_connection():
-        thriftclient.transport.open()
-        data = thriftclient.client.mymethod()
-        thriftclient.transport.close()
-        return data
-
-Options
-=======
-
-Other options are:
-
-THRIFTCLIENT_BUFFERED: use buffered transport (default False)
-
-THRIFTCLIENT_ZLIB: use zlib compressed transport (default False)
-
-	"""
 	BINARY = "BINARY"
 	COMPACT = "COMPACT"
 	if HAS_JSON_PROTOCOL:
@@ -198,7 +37,7 @@ THRIFTCLIENT_ZLIB: use zlib compressed transport (default False)
 			config = app.config
 
 		config.setdefault("THRIFTCLIENT_TRANSPORT", "tcp://localhost:9090")
-		config.setdefault("THRIFTCLIENT_PROTOCOL", ThriftClient.BINARY)
+		config.setdefault("THRIFTCLIENT_PROTOCOL", Thrift_Client.BINARY)
 
 		config.setdefault("THRIFTCLIENT_SSL_VALIDATE", True)
 		config.setdefault("THRIFTCLIENT_SSL_CA_CERTS", None)
@@ -310,11 +149,11 @@ THRIFTCLIENT_ZLIB: use zlib compressed transport (default False)
 			self.transport = TTransport.TFramedTransport(self.transport)
 
 		#configure thrift protocol
-		if config["THRIFTCLIENT_PROTOCOL"] == ThriftClient.BINARY:
+		if config["THRIFTCLIENT_PROTOCOL"] == Thrift_Client.BINARY:
 			self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		elif config["THRIFTCLIENT_PROTOCOL"] == ThriftClient.COMPACT:
+		elif config["THRIFTCLIENT_PROTOCOL"] == Thrift_Client.COMPACT:
 			self.protocol = TCompactProtocol.TCompactProtocol(self.transport)
-		elif HAS_JSON_PROTOCOL and config["THRIFTCLIENT_PROTOCOL"] == ThriftClient.JSON:
+		elif HAS_JSON_PROTOCOL and config["THRIFTCLIENT_PROTOCOL"] == Thrift_Client.JSON:
 			self.protocol = TJSONProtocol.TJSONProtocol(self.transport)
 		else:
 			raise RuntimeError(

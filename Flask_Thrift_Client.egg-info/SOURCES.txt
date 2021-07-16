@@ -1,0 +1,12 @@
+MANIFEST.in
+README.rst
+requirements.txt
+setup.py
+tox.ini
+Flask_ThriftClient.egg-info/PKG-INFO
+Flask_ThriftClient.egg-info/SOURCES.txt
+Flask_ThriftClient.egg-info/dependency_links.txt
+Flask_ThriftClient.egg-info/not-zip-safe
+Flask_ThriftClient.egg-info/requires.txt
+Flask_ThriftClient.egg-info/top_level.txt
+flask_thriftclient/__init__.py
